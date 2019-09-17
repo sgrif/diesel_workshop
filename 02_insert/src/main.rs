@@ -26,17 +26,27 @@ impl Post {
     }
 }
 
+#[derive(Insertable)]
+#[table_name = "posts"]
 struct NewPost<'a> {
     title: &'a str,
     body: &'a str,
 }
 
 fn save_new_post(conn: &PgConnection, title: &str, body: &str) -> QueryResult<()> {
+    diesel::insert_into(posts::table)
+        .values((
+            posts::title.eq(title),
+            posts::body.eq(body),
+        ))
+        .execute(conn)?;
     Ok(())
 }
 
 fn save_new_posts(conn: &PgConnection, new_posts: Vec<NewPost>) -> QueryResult<Vec<Post>> {
-    Ok(Vec::new())
+    diesel::insert_into(posts::table)
+        .values(new_posts)
+        .get_results(conn)
 }
 
 #[test]
