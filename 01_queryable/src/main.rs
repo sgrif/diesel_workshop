@@ -6,7 +6,10 @@ mod schema;
 use diesel::prelude::*;
 use failure::Fallible;
 
+use crate::schema::*;
+
 #[derive(PartialEq, Debug)]
+#[derive(Queryable)]
 struct Post {
     id: i32,
     title: String,
@@ -24,15 +27,20 @@ impl Post {
 }
 
 fn get_all_post_titles(conn: &PgConnection) -> QueryResult<Vec<String>> {
-    Ok(Vec::new())
+    posts::table.select(posts::title).load(conn)
 }
 
 fn get_all_post_data(conn: &PgConnection) -> QueryResult<Vec<(i32, String, Option<String>)>> {
-    Ok(Vec::new())
+    posts::table.load(conn)
 }
 
 fn get_all_posts(conn: &PgConnection) -> QueryResult<Vec<Post>> {
-    Ok(Vec::new())
+    // let posts = get_all_post_data(conn)?
+    //     .into_iter()
+    //     .map(|(id, title, body)| Post { id, title, body })
+    //     .collect();
+    // Ok(posts)
+    posts::table.load(conn)
 }
 
 #[test]
