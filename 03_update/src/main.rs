@@ -9,7 +9,7 @@ use failure::Fallible;
 use crate::schema::*;
 
 #[derive(PartialEq, Debug)]
-#[derive(Queryable)]
+#[derive(Queryable, Identifiable, AsChangeset)]
 struct Post {
     id: i32,
     title: String,
@@ -27,16 +27,22 @@ impl Post {
 }
 
 fn remove_all_bodies(conn: &PgConnection) -> QueryResult<()> {
-    // Make this function set the body of all posts to NULL
+    diesel::update(posts::table)
+        .set(posts::body.eq(None::<String>))
+        .execute(conn)?;
     Ok(())
 }
 
 fn update_post_title(conn: &PgConnection, id: i32, title: &str) -> QueryResult<Post> {
-    unimplemented!()
+    diesel::update(posts::table.find(id))
+        .set(posts::title.eq(title))
+        .get_result(conn)
 }
 
 fn update_post(conn: &PgConnection, post: Post) -> QueryResult<()> {
-    // Save all the values on the given post
+    diesel::update(&post)
+        .set(&post)
+        .execute(conn)?;
     Ok(())
 }
 
