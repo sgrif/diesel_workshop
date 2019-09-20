@@ -1,0 +1,6 @@
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+ALTER TABLE posts ADD COLUMN user_id INTEGER NOT NULL REFERENCES users (id);
