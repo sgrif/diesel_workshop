@@ -27,9 +27,10 @@ impl Post {
 }
 
 fn posts_about_rust(conn: &PgConnection) -> QueryResult<Vec<Post>> {
-    // Make this function return all posts that contain "Rust" in the title,
-    // ordered alphabetically
-    Ok(Vec::new())
+    posts::table
+        .filter(posts::title.like("%Rust%"))
+        .order(posts::title)
+        .load(conn)
 }
 
 #[test]
